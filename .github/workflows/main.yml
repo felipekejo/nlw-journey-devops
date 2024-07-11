@@ -26,12 +26,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
     
-      - name: Build docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }} .
+      # - name: Build docker image
+      #   run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }} .
 
-      - name: Push docker image
-        run: | 
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }}
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:latest
+      # - name: Push docker image
+      #   run: | 
+      #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }}
+      #     docker tag ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:latest
+      #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:latest
 
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:${{ steps.generate_sha.outputs.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/nlw-journey-devops:latest
